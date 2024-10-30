@@ -1,0 +1,107 @@
+<div id="beat-store">
+  <!-- Header Section -->
+  <div class="header">
+    <h1>🔥 Welcome to [Your Beat Store Name] 🔥</h1>
+    <p>Discover exclusive beats for your next project. Play, select a license, and download instantly.</p>
+  </div>
+
+  <!-- Beat Player Section -->
+  <div id="beat-list">
+    <div class="beat-item" data-beat-id="001" data-beat-name="Beat Title 1" data-price-basic="20" data-price-standard="40" data-price-premium="80">
+      <h2>Beat Title 1</h2>
+      <audio controls>
+        <source src="path/to/beat1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+      <button onclick="showLicensingOptions('001')">Select License</button>
+    </div>
+    <!-- Repeat .beat-item div for each beat -->
+  </div>
+
+  <!-- Licensing Modal -->
+  <div id="licensing-modal" style="display: none;">
+    <h3>Select Your License</h3>
+    <p id="beat-title"></p>
+    <div class="license-option">
+      <label>
+        <input type="radio" name="license" value="basic" onclick="updatePrice('basic')">
+        Basic License - $<span id="price-basic"></span>
+      </label>
+    </div>
+    <div class="license-option">
+      <label>
+        <input type="radio" name="license" value="standard" onclick="updatePrice('standard')">
+        Standard License - $<span id="price-standard"></span>
+      </label>
+    </div>
+    <div class="license-option">
+      <label>
+        <input type="radio" name="license" value="premium" onclick="updatePrice('premium')">
+        Premium License - $<span id="price-premium"></span>
+      </label>
+    </div>
+    <button id="purchase-btn" onclick="purchaseBeat()">Purchase</button>
+    <button onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+#beat-store {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+.header {
+  text-align: center;
+}
+.beat-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+#licensing-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.license-option {
+  margin-top: 10px;
+}
+button {
+  margin-top: 10px;
+}
+
+let selectedBeat = null;
+
+function showLicensingOptions(beatId) {
+  selectedBeat = document.querySelector(`.beat-item[data-beat-id="${beatId}"]`);
+  document.getElementById('beat-title').innerText = selectedBeat.dataset.beatName;
+  document.getElementById('price-basic').innerText = selectedBeat.dataset.priceBasic;
+  document.getElementById('price-standard').innerText = selectedBeat.dataset.priceStandard;
+  document.getElementById('price-premium').innerText = selectedBeat.dataset.pricePremium;
+
+  document.getElementById('licensing-modal').style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('licensing-modal').style.display = 'none';
+}
+
+function updatePrice(licenseType) {
+  const price = selectedBeat.dataset[`price${licenseType.charAt(0).toUpperCase() + licenseType.slice(1)}`];
+  document.getElementById('purchase-btn').innerText = `Purchase - $${price}`;
+}
+
+function purchaseBeat() {
+  const license = document.querySelector('input[name="license"]:checked').value;
+  const price = selectedBeat.dataset[`price${license.charAt(0).toUpperCase() + license.slice(1)}`];
+  
+  // Simulate purchasing logic here
+  alert(`You have purchased ${selectedBeat.dataset.beatName} with a ${license} license for $${price}.`);
+  closeModal();
+}
